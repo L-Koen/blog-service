@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  blog-service:
+    build:
+      context: .
+      dockerfile: compose/Dockerfile
+      args:
+        - UID=$MYUID
+        - GID=$MYGID
+    image: blog-service
+    container_name: blog-service
+    environment:
+      - PYTHONPATH=/app
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app  # Mounts your project directory for code changes
+      - sqlite_data_blog:/app/db.sqlite3  # Volume for SQLite database persistence
+    ports:
+      - "8000:8000"
+    command: /start
+
+
+volumes:
+  sqlite_data_blog:  # Defines a named volume for SQLite data
+
