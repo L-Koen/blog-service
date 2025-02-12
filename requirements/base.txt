@@ -1,4 +1,13 @@
-django
+# Code quality & testing
+mypy
 black
 flake8
 pytest
+beautifulsoup4
+lxml # Slightly faster html parser
+
+# Project
+django
+pytest-django
+python-dotenv
+markdown
