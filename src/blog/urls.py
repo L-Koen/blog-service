@@ -15,9 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import os
+from dotenv import load_dotenv
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from blog.views import HomeView
+
+# Load environment variables
+ENV_FILE = "/app/.env"
+load_dotenv(ENV_FILE)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path(os.getenv("ADMIN_URL"), admin.site.urls, name="admin"),
+    path("blog/", include(("posts.urls", "posts"), namespace="posts")),
+    path("", HomeView.as_view(), name="landing")
 ]

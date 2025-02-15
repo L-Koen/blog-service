@@ -23,9 +23,9 @@ def test_markdown_rendering():
 
 
 @pytest.mark.django_db
-def test_markdown_basic_conversion():
+def test_markdown_basic_conversion(markdown_post):
     # Setup
-    post = Post.objects.create(title="Markdown Test", content="## Heading\n**Bold** text")
+    post = markdown_post
 
     # Execute
     rendered = post.render_markdown()
@@ -40,11 +40,8 @@ def test_markdown_basic_conversion():
 
 
 @pytest.mark.django_db
-def test_markdown_table_rendering():
-    post = Post.objects.create(
-        title="Table Test",
-        content="| Header 1 | Header 2 |\n|----------|----------|\n| Row 1    | Row 2    |"
-    )
+def test_markdown_table_rendering(table_post):
+    post = table_post
     rendered = post.render_markdown()
 
     assert "<table>" in rendered  # Table tag should exist
@@ -55,11 +52,8 @@ def test_markdown_table_rendering():
 
 
 @pytest.mark.django_db
-def test_markdown_code_highlighting():
-    post = Post.objects.create(
-        title="Code Test",
-        content="```python\nprint('Hello, world!')\n```"
-    )
+def test_markdown_code_highlighting(code_post):
+    post = code_post
     rendered = post.render_markdown()
 
     assert '<pre class="codehilite">' in rendered  # Code is highlighted
@@ -68,11 +62,8 @@ def test_markdown_code_highlighting():
 
 
 @pytest.mark.django_db
-def test_markdown_toc_generation():
-    post = Post.objects.create(
-        title="TOC Test",
-        content="# Introduction\n## Subheading\n[TOC]"
-    )
+def test_markdown_toc_generation(toc_post):
+    post = toc_post
     rendered = post.render_markdown()
 
     assert '<div class="toc">' in rendered  # TOC wrapper should exist
