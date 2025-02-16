@@ -49,3 +49,11 @@ def toc_post(db):
         title="TOC Test",
         content="""# Heading 1\n## introduction\n### subheading\n[TOC]"""
     )
+
+@pytest.fixture
+def long_post(db):
+    """Create extra long post to test preview"""
+    return Post.objects.create(
+        title="Very Long Post",
+        content="\n".join([f"This is line {i}." for i in range(100)])
+    )

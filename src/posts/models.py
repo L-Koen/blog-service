@@ -8,3 +8,7 @@ class Post(models.Model):
 
     def render_markdown(self):
         return markdown.markdown(self.content, extensions=["extra", "codehilite", "toc"])
+
+    def preview(self, lines=20):
+        post = self.render_markdown()
+        return "\n".join(post.split("\n")[:lines])

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+  <h1>Blog Home</h1>
+    <ul>
+      {% for post in posts %}
+        <li><h3>{{post.title}}</h3></li>
+        <p> {{ post.preview }}</p>
+        
+      {% empty %}
+        <p>No posts yet.</p>
+      {% endfor %}
+    </ul>
+{% block content%}
+{% endblock %}
+
+</html>
