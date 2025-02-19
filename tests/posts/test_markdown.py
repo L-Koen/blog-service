@@ -1,5 +1,5 @@
 import pytest
-from posts.models import Post
+from posts.models import Post, BlogImage
 from bs4 import BeautifulSoup
 
 @pytest.mark.django_db
@@ -69,3 +69,32 @@ def test_markdown_toc_generation(toc_post):
     assert '<div class="toc">' in rendered  # TOC wrapper should exist
     assert '<a href="#introduction">' in rendered  # TOC should link to Introduction
     assert '<a href="#subheading">' in rendered  # TOC should link to Subheading
+
+
+@pytest.mark.django_db
+def test_render_markdown_adds_alt_text(test_image):
+    """Test auto-embedding alt text in markdown images."""
+    # Setup
+    """Creates a test image with alt text."""
+    test_im = BlogImage.objects.create(
+        image="blog_images/test_image.jpg",
+        alt_text="This is a test image"
+    )
+    """And test post with image"""
+    content = f"![Placeholder](/media/{test_im.image})"
+    test_post = Post.objects.create(title="Test Post", content=content)
+
+    # Execute
+    rendered = test_post.render_markdown()
+    soup = BeautifulSoup(rendered, "html.parser")
+    im_tag = soup.find("img")
+
+    # Verify
+    assert im_tag is not None
+    assert im_tag["alt"] == 'This is a test image'
+    assert im_tag.get('src') == f'/media/{test_im.image}'
+
+    # Cleanup
+    file_path = test_im.image.path
+    test_im.delete()
+    assert not test_im.image.storage.exists(file_path)  # Check that the file is gone

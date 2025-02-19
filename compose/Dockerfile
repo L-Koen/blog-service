@@ -1,8 +1,8 @@
 # Define an alias for the specific python version used in this file.
-FROM python:3-slim as python
+FROM python:3-slim AS python
 
 # Python build stage
-FROM python as python-build-stage
+FROM python AS python-build-stage
 
 # Install apt packages
 RUN apt update && apt install --no-install-recommends -y \
@@ -19,7 +19,7 @@ COPY ./requirements/base.txt .
 RUN pip wheel --wheel-dir /usr/src/app/wheels -r base.txt
 
 # Python 'run' stage
-FROM python as python-run-stage
+FROM python AS python-run-stage
 
 ARG APP_HOME=/app
 

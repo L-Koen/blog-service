@@ -1,5 +1,8 @@
 import pytest
-from posts.models import Post
+from io import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
+from posts.models import Post, Keyword
 
 @pytest.fixture
 def single_data():
@@ -57,3 +60,25 @@ def long_post(db):
         title="Very Long Post",
         content="\n".join([f"This is line {i}." for i in range(100)])
     )
+
+@pytest.fixture
+def test_image():
+    """Creates a temporary in-memory image for testing."""
+    img = Image.new("RGB", (100, 100), color=(255, 0, 0))  # Create a red square
+    img_io = BytesIO()
+    img.save(img_io, format="JPEG")
+    img_io.seek(0)
+
+    return SimpleUploadedFile("test_image.jpg", img_io.getvalue(), content_type="image/jpeg")
+
+@pytest.fixture
+def test_keyword(db):
+    """Creates a sample keyword."""
+    return Keyword.objects.create(name="Python")
+
+@pytest.fixture
+def test_post_with_keyword(db, test_keyword):
+    """Creates a sample post with a keyword."""
+    post = Post.objects.create(title="Django & Python", content="Using Python in Django.")
+    post.keywords.add(test_keyword)  # Attach the keyword
+    return post
