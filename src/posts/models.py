@@ -18,6 +18,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     keywords = models.ManyToManyField(Keyword, related_name="posts", blank=True)
+    published = models.BooleanField(default=True)
 
     def render_markdown(self):
         """Render markdown. Look for images, to embed their alt-text"""
