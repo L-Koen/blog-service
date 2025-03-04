@@ -22,6 +22,12 @@ def multiple_posts(db):
     ]
 
 @pytest.fixture
+def large_number_posts(db):
+    """Returns a larger number of posts, all published."""
+    posts = [Post.objects.create(title=f"Post {i}", content="A"*i) for i in range(9)]
+    return posts
+
+@pytest.fixture
 def markdown_post(db):
     """Creates a test post with Markdown formatting."""
     return Post.objects.create(
@@ -81,4 +87,24 @@ def test_post_with_keyword(db, test_keyword):
     """Creates a sample post with a keyword."""
     post = Post.objects.create(title="Django & Python", content="Using Python in Django.")
     post.keywords.add(test_keyword)  # Attach the keyword
+    return post
+
+@pytest.fixture
+def test_posts_filter(db):
+    """Creates 2 posts. One with the keywords Django and Python,
+    a second with only Python"""
+    post1 = Post.objects.create(title="Django & Python", content="Using Python in Django.")
+    post2 = Post.objects.create(title="Data Analysis with Python", content="Using Pandas, Numpy, and SciPy.")
+    python = Keyword.objects.create(name='Python')
+    django = Keyword.objects.create(name='Django')
+    post1.keywords.add(python, django)
+    post2.keywords.add(python)
+    return [post1, post2], [python, django]
+
+@pytest.fixture
+def ukulele_post(db):
+    """Create test post with Ukulele keyword"""
+    post = Post.objects.create(title="Ukulele", content="I like playing the Ukulele")
+    ukulele = Keyword.objects.create(name="Ukulele")
+    post.keywords.add(ukulele)
     return post
