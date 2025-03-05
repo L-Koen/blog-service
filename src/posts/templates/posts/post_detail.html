@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Bolg Post</title>
-</head>
-<body>
-    <h1>{{ post.title }}</h1>
-    <p> {{ post.render_markdown|safe }}</p>
-    <br>
-    <a href="{% url 'posts:home' %}">← Back to Blog Home</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.render_markdown|safe }}</p>
+{% endblock %}

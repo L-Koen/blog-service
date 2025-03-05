@@ -74,7 +74,7 @@ class TestBlogHomePage:
         soup = BeautifulSoup(response.content, "html.parser")
 
         # Execute
-        link_tags = soup.find_all("a", href=True)
+        link_tags = soup.find_all("a", href=True, class_="post-link")
         
         # Verify
         assert len(link_tags) == len(multiple_posts)
