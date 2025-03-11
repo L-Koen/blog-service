@@ -50,7 +50,9 @@ RUN sed -i 's/\r$//g' /start && chmod +x /start
 ARG UID
 ARG GID
 
-RUN groupadd --gid $GID mygroup \
+RUN if ! getent group $GID > /dev/null 2>&1; then \
+        groupadd --gid $GID mygroup; \
+    fi \
     && useradd --uid $UID --gid $GID --create-home myuser
 
 USER myuser
