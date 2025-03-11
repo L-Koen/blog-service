@@ -1,4 +1,17 @@
 /* static/css/styles.css */
+
+/* Banner Styling */
+.site-banner {
+    text-align: center;  /* Centers the image */
+    background-color: #f4f4f4;  /* Light gray background (adjust as needed) */
+    padding: 10px 0;  /* Adds spacing above and below */
+}
+
+.site-banner-img {
+    max-width: 30%;  /* Ensures the image scales well */
+    height: auto;
+}
+
 body {
     font-family: Arial, sans-serif;
     max-width: 800px;
