@@ -9,15 +9,15 @@ class TestLandingView():
     """Test landing page (/.)"""
     def test_status_code(self, client):
         """Test status code of the landing page."""
-        response = client.get(reverse('landing'))
+        response = client.get(reverse('home'))
         assert response.status_code == 200
-        assert "Welcome to Tinkeringalong!" in str(response.content)
+        assert "Hi, this is my tinkeringalong place" in str(response.content)
 
     def test_has_blog_link(self, client):
         """Test if there is a link to blog on landing page"""
-        response = client.get(reverse('landing'))
+        response = client.get(reverse('home'))
         soup = BeautifulSoup(response.content, 'html.parser')
-        assert soup.find("a", {"href": reverse('posts:home')}).text == "Blog"
+        assert soup.find("a", {"href": reverse('posts:blog')}).text == "Blog"
 
 
 @pytest.mark.django_db
@@ -26,7 +26,7 @@ class TestBlogHomePage:
 
     def test_blog_home_loads(self, client, single_post):
         """Ensure the blog page loads properly."""
-        url = reverse("posts:home")
+        url = reverse("posts:blog")
         response = client.get(url)
 
         assert response.status_code == 200
@@ -34,7 +34,7 @@ class TestBlogHomePage:
 
     def test_blog_home_shows_latest_posts(self, client, multiple_posts):
         """Ensure multiple recent posts are displayed, latest first."""
-        url = reverse("posts:home")
+        url = reverse("posts:blog")
         response = client.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
 
@@ -48,7 +48,7 @@ class TestBlogHomePage:
     def test_pagination_list(self, client, large_number_posts):
         """Ensure pagination works properly. 5 posts by default"""
         # Setup
-        url = reverse("posts:home")
+        url = reverse("posts:blog")
 
         # Test first 5 posts
         response = client.get(url)
@@ -69,12 +69,12 @@ class TestBlogHomePage:
     def test_links_to_item_view(self, client, multiple_posts):
         """ Test that it actually links to the posts"""
         # Setup
-        url = reverse("posts:home")
+        url = reverse("posts:blog")
         response = client.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
 
         # Execute
-        link_tags = soup.find_all("a", href=True, class_="post-link")
+        link_tags = soup.find_all("a", href=True, class_="post-title-link")
         
         # Verify
         assert len(link_tags) == len(multiple_posts)
@@ -93,7 +93,7 @@ class TestKeywordFilterUI:
 
     def test_keyword_filter_dropdown_present(self, client):
         """Ensure a multiple-selection dropdown for keyword filtering is present."""
-        response = client.get(reverse("posts:home"))
+        response = client.get(reverse("posts:blog"))
         soup = BeautifulSoup(response.content, "html.parser")
         select = soup.find("select", {"name": "keywords", "multiple": True})
 
@@ -101,7 +101,7 @@ class TestKeywordFilterUI:
 
     def test_and_or_selector_present(self, client):
         """Ensure a radio button or dropdown is available to choose AND/OR filtering."""
-        response = client.get(reverse("posts:home"))
+        response = client.get(reverse("posts:blog"))
         soup = BeautifulSoup(response.content, "html.parser")
         and_or_selector = soup.find("select", {"name": "filter_mode"}) or \
                           soup.find("input", {"type": "radio", "name": "filter_mode"})
@@ -123,7 +123,7 @@ class TestKeywordFiltering:
         django = keywords[1].name
 
         # Execute
-        url = reverse("posts:home") + f"?keywords={python},{django}&filter_mode=OR"
+        url = reverse("posts:blog") + f"?keywords={python},{django}&filter_mode=OR"
         response = client.get(url)
 
         assert response.status_code == 200
@@ -140,7 +140,7 @@ class TestKeywordFiltering:
         django = keywords[1].name
 
         # Execute
-        url = reverse("posts:home") + f"?keywords={python},{django}&filter_mode=AND"
+        url = reverse("posts:blog") + f"?keywords={python},{django}&filter_mode=AND"
         response = client.get(url)
 
         assert response.status_code == 200
@@ -154,10 +154,10 @@ class TestTextSearchUI:
 
     def test_text_search_field_present(self, client):
         """Ensure a normal text search input field and submit button exist."""
-        response = client.get(reverse("posts:home"))
+        response = client.get(reverse("posts:blog"))
         soup = BeautifulSoup(response.content, "html.parser")
 
-        text_input = soup.find("input", {"type": "text", "name": "search"})
+        text_input = soup.find("textarea", {"name": "search"})
         submit_button = soup.find("button", {"type": "submit"})
 
         assert text_input is not None, "Text search input should exist."
@@ -175,7 +175,7 @@ class TestTextSearchFunctionality:
         test_post2 = posts [1]
         python = keywords[0].name
         django = keywords[1].name
-        url = reverse("posts:home") + "?search=Django"
+        url = reverse("posts:blog") + "?search=Django"
         response = client.get(url)
 
         assert response.status_code == 200
@@ -184,7 +184,7 @@ class TestTextSearchFunctionality:
 
     def test_search_returns_no_results_for_nonexistent_text(self, client):
         """Ensure search returns no posts if no matches exist."""
-        url = reverse("posts:home") + "?search=NonExistentTerm"
+        url = reverse("posts:blog") + "?search=NonExistentTerm"
         response = client.get(url)
 
         assert response.status_code == 200
@@ -255,5 +255,5 @@ class TestItemView:
         response = client.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
 
-        back_link = soup.find("a", href=reverse("posts:home"))
+        back_link = soup.find("a", href=reverse("posts:blog"))
         assert back_link, "A 'Back to Blog' link should be present."

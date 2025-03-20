@@ -28,5 +28,5 @@ load_dotenv(ENV_FILE)
 urlpatterns = [
     path(os.getenv("ADMIN_URL"), admin.site.urls, name="admin"),
     path("blog/", include(("posts.urls", "posts"), namespace="posts")),
-    path("", HomeView.as_view(), name="landing")
+    path("", HomeView.as_view(), name="home")
 ]

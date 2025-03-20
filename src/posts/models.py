@@ -40,7 +40,8 @@ class Post(models.Model):
     published = models.BooleanField(default=True)
 
     def render_markdown(self):
-        """Render markdown. Look for images, to embed their alt-text"""
+        """Render markdown. Look for images, to embed their alt-text and 
+        give them a CSS class for styling."""
         # 1) Render post
         rendered_html = markdown.markdown(self.content, extensions=["extra", "codehilite", "toc"])
 
@@ -57,11 +58,30 @@ class Post(models.Model):
             # Only add alt-text if img is found and has text
             if image_obj and image_obj.alt_text:
                 img["alt"] = image_obj.alt_text
+            
+            # Also give it a class:
+            img["class"] = (img.get("class", []) or []) + ["post-image"]
 
         # 4) Return updated soup
         return str(soup)
 
-    def preview(self, lines=20):
-        post = self.render_markdown()
-        return "\n".join(post.split("\n")[:lines])
+    def preview(self, lines=10):
+        """Return short preview of post, excluding images
+        Then rebuild the preview to close of tags just in case."""
+        post_html = self.render_markdown()
+        soup = BeautifulSoup(post_html, "html.parser")
 
+        for img in soup.find_all("img"):
+            alt_text = img.get("alt", "").strip()
+            if alt_text:
+                # Replace <img> with its alt text wrapped in <em> for visibility
+                img.replace_with(soup.new_tag("em", string=f"[Image: {alt_text}]"))
+            else:
+                img.decompose()  # No alt text = remove it completely
+
+        clean_html = str(soup)
+
+        truncated = "\n".join(clean_html.splitlines()[:lines])
+        # Re-parse to auto-close unclosed tags
+        soup = BeautifulSoup(truncated, "html.parser")
+        return str(soup)

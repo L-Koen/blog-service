@@ -21,6 +21,7 @@ load_dotenv(ENV_FILE)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+print(BASE_DIR)
 
 # Media Dirs
 MEDIA_URL = "/media/"
@@ -47,7 +48,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "posts"
+    "posts",
+    "blog"
 ]
 
 MIDDLEWARE = [

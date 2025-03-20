@@ -169,3 +169,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Blog images
+/src/media/*
+/scr/posts/static/images/*

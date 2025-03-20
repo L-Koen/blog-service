@@ -2,9 +2,10 @@
 
 {% block title %}Blog Home{% endblock %}
 
-{% block content %}  
+{% block filters %}  
   <form method="get">
     <label for="keywords">Filter by keywords:</label>
+    <br>
     <select name="keywords" id="keywords" multiple>
         {% for keyword in available_keywords %}
             <option value="{{ keyword.name }}">{{ keyword.name | safe }}</option>
@@ -20,14 +21,20 @@
     <br>
     <!--  Add a normal text search input -->
     <label for="search">Search content:</label>
-    <input type="text" id="search" name="search" value="{{ request.GET.search|default:'' }}">
+    <br>
+    <textarea id="search" name="search">{{ request.GET.search|default:'' }}</textarea>    <br>
     <br>
     <button type="submit">Filter</button>
   </form>
+{% endblock %}
+
+{% block content %}
   <ul>
     {% for post in posts %}
-      <li><h3><a href="{% url 'posts:post_detail' post.id %}" class="post-link">{{ post.title | safe }}</a></h3></li>
+      <li><h3><a href="{% url 'posts:post_detail' post.id %}" class="post-title-link">{{ post.title | safe }}</a></h3></li>
       <p> {{ post.preview | safe }}</p>
+      <p> <a href="{% url 'posts:post_detail' post.id %}" class="post-link">Read more... </a></p>
+      <br>
       
     {% empty %}
       <p>No posts yet.</p>

@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}TinkeringAlong Blog{% endblock %}</title>
+    <title>{% block title %}TinkeringAlong{% endblock %}</title>
     
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/landing.css' %}">
 
     {% block extra_head %}{% endblock %}
 </head>
 
 
 <body>
-  <header class="site-banner">
-    <div class="banner-content">
-      <img src="{% static 'images/banner.webp' %}" alt="TinkeringAlong Banner" class="site-banner-img">
-      <div class="site-title-overlay">tinkeringalong</div>
-    </div>
-  </header>
-
-
+  <div class="page-wrapper">
+    <header class="site-banner">
+      <div class="banner-content">
+        <img src="{% static 'images/banner.webp' %}" alt="TinkeringAlong Banner" class="site-banner-img">
+        <div class="site-title-overlay">tinkeringalong</div>
+      </div>
+    </header>
 
     <div class="layout-grid">
         <!-- Left Sidebar -->
@@ -42,11 +41,11 @@
             {% block filters %}{% endblock %}
         </aside>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 TinkeringAlong</p>
-    </footer>
+  </div>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 TinkeringAlong</p>
+  </footer>
 
     {% block extra_scripts %}{% endblock %}
 </body>

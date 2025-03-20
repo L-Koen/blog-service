@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-    <h1>'Welcome to Tinkeringalong!'</h1>
-    <a href="{% url 'posts:home' %}">Blog</a>
+{% extends "base.html" %}
 
-{% block content%}
+{% block title %}tinkeringalong!{% endblock %}
+
+{% block content %}
+  <p>Hi, this is my tinkeringalong place.</p>
+  <p>Feel free to check out my blog where I share my thoughts progres on various topics.</p>
+  <p>Most are Python coding, DIY, cycling and Ukulele related.</p>
 {% endblock %}
-
-</html>
