@@ -9,7 +9,7 @@ services:
     image: blog-service
     container_name: blog-service
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/src
     stdin_open: true
     tty: true
     volumes:

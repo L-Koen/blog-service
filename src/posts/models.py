@@ -2,7 +2,9 @@ from django.db import models
 import markdown
 from os import remove
 from django.utils.timezone import now
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
+from bs4.element import AttributeValueList
+from typing import cast, List, Union
 
 class Keyword(models.Model):
     """Model for keywords (Tags)"""
@@ -52,15 +54,21 @@ class Post(models.Model):
         # 3) For each image, add alt text
         soup = BeautifulSoup(rendered_html, "html.parser")
         for img in soup.find_all("img"):
-            image_name = img["src"].split("/")[-1]
-            image_obj = BlogImage.objects.filter(image__contains=image_name).first()
+            if isinstance(img, Tag) and img.has_attr("src"):
+                src = str(img["src"])
+                image_name = src.split("/")[-1]
+                image_obj = BlogImage.objects.filter(image__contains=image_name).first()
 
-            # Only add alt-text if img is found and has text
-            if image_obj and image_obj.alt_text:
-                img["alt"] = image_obj.alt_text
+                # Only add alt-text if img is found and has text
+                if image_obj and image_obj.alt_text:
+                    img["alt"] = image_obj.alt_text
             
-            # Also give it a class:
-            img["class"] = (img.get("class", []) or []) + ["post-image"]
+                # Also give it a class:
+                current_class: Union[str, list[str], None] = img.get("class")  # Explicitly typed
+                if isinstance(current_class, list):
+                    img["class"] = cast(AttributeValueList, current_class + ["post-image",])
+                else:
+                    img["class"] = cast(AttributeValueList, ["post-image"])
 
         # 4) Return updated soup
         return str(soup)
@@ -72,12 +80,14 @@ class Post(models.Model):
         soup = BeautifulSoup(post_html, "html.parser")
 
         for img in soup.find_all("img"):
-            alt_text = img.get("alt", "").strip()
-            if alt_text:
-                # Replace <img> with its alt text wrapped in <em> for visibility
-                img.replace_with(soup.new_tag("em", string=f"[Image: {alt_text}]"))
-            else:
-                img.decompose()  # No alt text = remove it completely
+            if isinstance(img, Tag):
+                alt_raw = img.get("alt")
+                alt_text = alt_raw.strip() if isinstance(alt_raw, str) else ""
+                if alt_text:
+                    # Replace <img> with its alt text wrapped in <em> for visibility
+                    img.replace_with(soup.new_tag("em", string=f"[Image: {alt_text}]"))
+                else:
+                    img.decompose()  # No alt text = remove it completely
 
         clean_html = str(soup)
 

@@ -5,6 +5,7 @@ flake8
 pytest
 beautifulsoup4
 lxml # Slightly faster html parser
+django-stubs[compatible-mypy]
 
 # Project
 django
@@ -12,3 +13,4 @@ pytest-django
 python-dotenv
 markdown
 pillow
+types-Markdown
