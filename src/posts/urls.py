@@ -7,7 +7,7 @@ app_name = "posts"
 
 urlpatterns = [
     path("", views.HomePageView.as_view(), name="blog"),
-    path("posts/<int:pk>/", views.PostDetailView.as_view(), name="post_detail")
+    path("posts/<int:pk>/", views.PostDetailView.as_view(), name="post_detail"),
 ]
 
 if settings.DEBUG:

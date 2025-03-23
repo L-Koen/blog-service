@@ -1,13 +1,14 @@
 from django.db import models
 import markdown
 from os import remove
-from django.utils.timezone import now
 from bs4 import BeautifulSoup, Tag
 from bs4.element import AttributeValueList
-from typing import cast, List, Union
+from typing import cast, Union
+
 
 class Keyword(models.Model):
     """Model for keywords (Tags)"""
+
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
@@ -16,6 +17,7 @@ class Keyword(models.Model):
 
 class BlogImage(models.Model):
     """Model to store blog post images with optional alt text."""
+
     image = models.ImageField(upload_to="blog_images")
     alt_text = models.CharField(max_length=255, blank=True)
 
@@ -34,6 +36,7 @@ class BlogImage(models.Model):
 
 class Post(models.Model):
     """Model representing a blog post."""
+
     title = models.CharField(max_length=200)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -42,10 +45,12 @@ class Post(models.Model):
     published = models.BooleanField(default=True)
 
     def render_markdown(self):
-        """Render markdown. Look for images, to embed their alt-text and 
+        """Render markdown. Look for images, to embed their alt-text and
         give them a CSS class for styling."""
         # 1) Render post
-        rendered_html = markdown.markdown(self.content, extensions=["extra", "codehilite", "toc"])
+        rendered_html = markdown.markdown(
+            self.content, extensions=["extra", "codehilite", "toc"]
+        )
 
         # 2) Return if it does not contain images
         if "<img" not in rendered_html:
@@ -62,11 +67,19 @@ class Post(models.Model):
                 # Only add alt-text if img is found and has text
                 if image_obj and image_obj.alt_text:
                     img["alt"] = image_obj.alt_text
-            
+
                 # Also give it a class:
-                current_class: Union[str, list[str], None] = img.get("class")  # Explicitly typed
+                current_class: Union[str, list[str], None] = img.get(
+                    "class"  # Explicitly typed
+                )
                 if isinstance(current_class, list):
-                    img["class"] = cast(AttributeValueList, current_class + ["post-image",])
+                    img["class"] = cast(
+                        AttributeValueList,
+                        current_class
+                        + [
+                            "post-image",
+                        ],
+                    )
                 else:
                     img["class"] = cast(AttributeValueList, ["post-image"])
 
