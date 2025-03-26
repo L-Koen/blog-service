@@ -131,7 +131,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "blog/static/"
+STATICFILES_DIRS = []  # Usually empty when using app-local static dirs
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # This is what Nginx serves
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
