@@ -19,14 +19,19 @@ import os
 from dotenv import load_dotenv
 from django.contrib import admin
 from django.urls import path, include
-from blog.views import HomeView
+from django.shortcuts import redirect
 
 # Load environment variables
 ENV_FILE = "/app/.env"
 load_dotenv(ENV_FILE)
 
+
+def redirect_to_static_home(request):
+    return redirect("/")
+
+
 urlpatterns = [
     path(os.getenv("ADMIN_URL", "admin/"), admin.site.urls, name="admin"),
     path("blog/", include(("posts.urls", "posts"), namespace="posts")),
-    path("", HomeView.as_view(), name="home"),
+    path("", redirect_to_static_home, name="home"),
 ]

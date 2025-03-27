@@ -5,22 +5,6 @@ from posts.models import Post, Keyword, BlogImage
 
 
 @pytest.mark.django_db
-class TestLandingView():
-    """Test landing page (/.)"""
-    def test_status_code(self, client):
-        """Test status code of the landing page."""
-        response = client.get(reverse('home'))
-        assert response.status_code == 200
-        assert "Hi, this is my tinkeringalong place" in str(response.content)
-
-    def test_has_blog_link(self, client):
-        """Test if there is a link to blog on landing page"""
-        response = client.get(reverse('home'))
-        soup = BeautifulSoup(response.content, 'html.parser')
-        assert soup.find("a", {"href": reverse('posts:blog')}).text == "Blog"
-
-
-@pytest.mark.django_db
 class TestBlogHomePage:
     """Tests for the blog home page."""
 

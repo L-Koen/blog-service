@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from typing import List
 
 
 # Load environment variables
@@ -49,7 +50,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "posts",
-    "blog",
 ]
 
 MIDDLEWARE = [
@@ -132,7 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "blog/static/"
-STATICFILES_DIRS = []  # Usually empty when using app-local static dirs
+STATICFILES_DIRS: List[str] = []  # Usually empty when using app-local static dirs
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # This is what Nginx serves
 
 # Default primary key field type
