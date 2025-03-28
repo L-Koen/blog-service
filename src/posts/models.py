@@ -64,6 +64,10 @@ class Post(models.Model):
                 image_name = src.split("/")[-1]
                 image_obj = BlogImage.objects.filter(image__contains=image_name).first()
 
+                if image_obj:
+                    # Set relative path instead of hardcoded absolute URL
+                    img["src"] = image_obj.image.url
+
                 # Only add alt-text if img is found and has text
                 if image_obj and image_obj.alt_text:
                     img["alt"] = image_obj.alt_text

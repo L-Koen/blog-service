@@ -29,7 +29,7 @@ class TestPostModel():
         # Check that the instance was saved
         assert BlogImage.objects.count() == 1
         assert blog_image.image.name.startswith("blog_images/test_image")  # Check file path
-        assert blog_image.image.url == f'/media/{blog_image.image.name}'
+        assert blog_image.image.url == f'/blog/media/{blog_image.image.name}'
 
         file_path = blog_image.image.path
         print(file_path)

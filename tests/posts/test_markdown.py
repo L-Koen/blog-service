@@ -92,7 +92,7 @@ def test_render_markdown_adds_alt_text(test_image):
     # Verify
     assert im_tag is not None
     assert im_tag["alt"] == 'This is a test image'
-    assert im_tag.get('src') == f'/media/{test_im.image}'
+    assert im_tag.get('src') == f'/blog/media/{test_im.image}'
 
     # Cleanup
     file_path = test_im.image.path

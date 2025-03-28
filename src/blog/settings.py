@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 print(BASE_DIR)
 
 # Media Dirs
-MEDIA_URL = "/media/"
+MEDIA_URL = "blog/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Quick-start development settings - unsuitable for production
@@ -139,3 +139,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # This is what Nginx serves
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CORS_ALLOW_ALL_ORIGINS = False
+
+
+CORS_ALLOWED_ORIGINS = ["http://developmac.local:8080", "https://developmac.local:8443"]
+CORS_ALLOW_CREDENTIALS = True
+
+# Allow cookies in cross-site requests
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True  # Required for SameSite=None (use HTTPS in production)
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://developmac.local:8080",
+    "https://developmac.local:8443",
+]

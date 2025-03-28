@@ -31,7 +31,9 @@ def redirect_to_static_home(request):
 
 
 urlpatterns = [
-    path(os.getenv("ADMIN_URL", "admin/"), admin.site.urls, name="admin"),
+    path(
+        os.getenv("blog/" + "ADMIN_URL", "blog/admin/"), admin.site.urls, name="admin"
+    ),
     path("blog/", include(("posts.urls", "posts"), namespace="posts")),
     path("", redirect_to_static_home, name="home"),
 ]
