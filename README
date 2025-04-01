@@ -1,0 +1,72 @@
+# TinkeringAlong Blog Service
+
+## Description
+A lightweight, Markdown-powered blog service built with Django, designed to integrate into a larger microservices setup. This service handles blog post creation, keyword-based filtering, media/image embedding with alt-text support, and simple search.
+
+## Features
+- Clean separation of concerns: only responsible for blog functionality
+- Supports Markdown content (with code highlighting and tables)
+- Image uploads with alt-text (for accessibility)
+- Keyword-based filtering (with AND/OR logic)
+- Post previews with closed HTML tags
+- Pagination
+- Admin-only post management
+- Ready for CI/CD deployment with Docker
+- Can be served via Nginx and Gunicorn
+
+## Tech Stack
+- Python
+- Django
+- SQLite (lightweight, small blog)
+- Docker & Docker Compose
+- Pytest, mypy, black, flake8
+- BeautifulSoup & Markdown extensions
+- Gunicorn if required
+
+## Running Locally (Dev)
+
+```bash
+# Clone and enter the repo
+git clone https://github.com/yourusername/blog-service.git
+cd blog-service
+
+# Build and start the containers
+./start_dev.sh
+
+# Attach shell to make the migrations work (depends on your docker container)
+cd /app/src
+python mamage.py migrate
+
+# Create a superuser (first time only, again in the docker shell)
+cd /app/src
+python manage.py createsuperuser
+```
+
+## Running Tests
+
+```bash
+./run_checks.sh
+```
+
+This script runs:
+- pytest for tests
+- mypy for static typing
+- flake8 for linting
+- black --check for formatting
+
+## Test-Driven Development (TDD)
+This project is built using TDD principles. You’ll find test cases for:
+- Models (Post, Keyword, BlogImage)
+- Views (Homepage with filters, Detail view)
+- Markdown rendering with image enhancement
+- Post preview logic
+- Keyword filters (AND/OR logic + UI checks)
+- Search form behavior
+
+## Deployment Notes
+The app is designed to run behind Nginx using Gunicorn. Nginx serves static and media files directly for efficiency.
+- Static files are collected with collectstatic and stored outside the container
+- Media uploads are saved to /media/ and served by Nginx
+- Gunicorn runs the Django app using:
+  - gunicorn blog.wsgi:application --bind 0.0.0.0:8000
+- Self-signed certificates can be used for local HTTPS testing via Nginx.

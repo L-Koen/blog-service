@@ -19,13 +19,14 @@ from typing import List
 # Load environment variables
 ENV_FILE = "/app/.env"
 load_dotenv(ENV_FILE)
+BASE_PATH = os.getenv("BASE_PATH", "blog/")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 print(BASE_DIR)
 
 # Media Dirs
-MEDIA_URL = "blog/media/"
+MEDIA_URL = BASE_PATH + os.getenv("MEDIA_URL", "media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Quick-start development settings - unsuitable for production
@@ -131,7 +132,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "blog/static/"
+STATIC_URL = BASE_PATH + os.getenv("STATIC_URL", "static/")
 STATICFILES_DIRS: List[str] = []  # Usually empty when using app-local static dirs
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # This is what Nginx serves
 
@@ -143,7 +144,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_ALL_ORIGINS = False
 
 
-CORS_ALLOWED_ORIGINS = ["http://developmac.local:8080", "https://developmac.local:8443"]
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "localhost:8000").split(",")
 CORS_ALLOW_CREDENTIALS = True
 
 # Allow cookies in cross-site requests
@@ -151,9 +152,6 @@ CSRF_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SECURE = True  # Required for SameSite=None (use HTTPS in production)
 SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = True
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://developmac.local:8080",
-    "https://developmac.local:8443",
-]
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "localhost:8000").split(",")

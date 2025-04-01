@@ -24,6 +24,7 @@ from django.shortcuts import redirect
 # Load environment variables
 ENV_FILE = "/app/.env"
 load_dotenv(ENV_FILE)
+BASE_PATH = os.getenv("BASE_PATH", "blog/")
 
 
 def redirect_to_static_home(request):
@@ -31,9 +32,7 @@ def redirect_to_static_home(request):
 
 
 urlpatterns = [
-    path(
-        os.getenv("blog/" + "ADMIN_URL", "blog/admin/"), admin.site.urls, name="admin"
-    ),
-    path("blog/", include(("posts.urls", "posts"), namespace="posts")),
+    path(BASE_PATH + os.getenv("ADMIN_URL", "admin/"), admin.site.urls, name="admin"),
+    path(BASE_PATH, include(("posts.urls", "posts"), namespace="posts")),
     path("", redirect_to_static_home, name="home"),
 ]
