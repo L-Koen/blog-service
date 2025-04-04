@@ -10,6 +10,9 @@ services:
     container_name: blog-service
     environment:
       - PYTHONPATH=/app/src
+      - RUN_MODE=${RUN_MODE}
+      - PORT=${PORT}
+      - DEBUG=${DEBUG}
     stdin_open: true
     tty: true
     volumes:

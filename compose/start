@@ -4,5 +4,19 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-#python ./src/manage.py runserver 0.0.0.0:8000
-gunicorn blog.wsgi:application --bind 0.0.0.0:8000
+
+echo $RUN_MODE
+
+: "${RUN_MODE:=gunicorn}"     # default to gunicorn
+: "${PORT:=8000}"             # default port
+
+if [ "$RUN_MODE" = "django" ]; then
+  echo "Starting Django dev server on port $PORT..."
+  python ./src/manage.py runserver 0.0.0.0:$PORT
+elif [ "$RUN_MODE" = "gunicorn" ]; then
+  echo "Starting Gunicorn on port $PORT..."
+  gunicorn blog.wsgi:application --bind 0.0.0.0:$PORT
+else
+  echo "Unknown RUN_MODE: $RUN_MODE"
+  exit 1
+fi
