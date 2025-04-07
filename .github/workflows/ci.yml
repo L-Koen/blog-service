@@ -24,10 +24,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repo
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
       
       - name: Create .env.test from GitHub secrets
-      - run: |
+        run: |
           echo "DEBUG=${{ secrets.DJANGO_DEBUG }}" >> .env.test
           echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
           echo "ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" >> .env
@@ -42,12 +42,12 @@ jobs:
 
       # Build docker and start server
       - name: Start test
-      - run: |
+        run: |
           chmod +x ./start_test.sh
           ./start_test.sh
 
       # Run tests and code quality checks
       - name: Run checks
-      - run: |
+        run: |
           chmod +x ./run_checks.test
           ./run_checks.test
