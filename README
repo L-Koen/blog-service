@@ -83,7 +83,7 @@ The app is designed to run behind Nginx using Gunicorn. Nginx serves static and 
 - Static files are collected with collectstatic and stored outside the container
 - Media uploads are saved to /media/ and served by Nginx
 - Gunicorn runs the Django app using:
-  - gunicorn blog.wsgi:application --bind 0.0.0.0:8000
+  - gunicorn blog.wsgi:application --bind 0.0.0.0:$PORT
 - Self-signed certificates can be used for local HTTPS testing via Nginx.
 
 ## The `.env` file
@@ -95,7 +95,7 @@ See the `.env.example` for all parameters.
 | `DEBUG` | `True` or `False`. Sets Django's debug mode. Use `False` in production. |
 | `ALLOWED_HOSTS` | Comma-separated list. IP/domain names where Django is allowed to serve. |
 | `SECRET_KEY` | Your Django secret key. _(Insert a secure, random key here!)_ |
-| `RUN_MODE` | Either `django` or `gunicorn`. Sets which web server is used. |
+| `RUN_MODE` | Either `django`,  `test`, or `prod`. Sets which web server is used. |
 | `PORT` | Port where the app will be available. |
 | `BASE_PATH` | Base path added to the host (e.g., `/blog/`). Used for routing and static/media URLs. |
 | `ADMIN_URL` | Change the URL of the admin panel. _(Obscurity, not security, but useful against bots.)_ |
