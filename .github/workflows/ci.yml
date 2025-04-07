@@ -28,10 +28,10 @@ jobs:
       
       - name: Create .env.test from GitHub secrets
         run: |
-          echo "DEBUG=${{ secrets.DJANGO_DEBUG }}" >> .env.test
-          echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
-          echo "ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" >> .env
-          echo "RUN_MODE=${{ secrets.DJANGO_RUN_MODE }}" >> .env.test
+          echo "DEBUG=${{ secrets.DEBUG }}" >> .env.test
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+          echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
+          echo "RUN_MODE=${{ secrets.RUN_MODE }}" >> .env.test
           echo "PORT=8000" >> .env.test
           echo "BASE_PATH=blog/" >> .env
           echo "ADMIN_URL=admin/" >> .env
