@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+echo "Running possible migrations."
+python ./src/manage.py migrate --noinput
+
+: "${RUN_MODE:=prod}"     # default to prod for safety. It is the most restricted.
+: "${PORT:=8000}"         # default port
+
+if [ "$RUN_MODE" = "django" ]; then
+  echo "Starting Django dev server on port $PORT..."
+  python ./src/manage.py runserver 0.0.0.0:$PORT
+elif [ "$RUN_MODE" = "test" ]; then
+  echo "Starting Gunicorn on port $PORT..."
+  gunicorn blog.wsgi:application --bind 0.0.0.0:$PORT
+elif [ "$RUN_MODE" = "prod" ]; then
+  echo "Starting Gunicorn on port $PORT..."
+  gunicorn blog.wsgi:application --bind 0.0.0.0:$PORT
+else
+  # No other modes are implemented, so this is an error
+  echo "Unknown RUN_MODE: $RUN_MODE"
+  exit 1
+fi

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TinkeringAlong Blog{% endblock %}</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+
+<body>
+  <header class="site-banner">
+    <div class="banner-content">
+      <img src="{% static 'images/banner.webp' %}" alt="TinkeringAlong Banner" class="site-banner-img">
+      <div class="site-title-overlay">tinkeringalong</div>
+    </div>
+  </header>
+
+
+
+    <div class="layout-grid">
+        <!-- Left Sidebar -->
+        <aside class="sidebar-left">
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'posts:blog' %}">Blog</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar-right">
+            {% block filters %}{% endblock %}
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 TinkeringAlong</p>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

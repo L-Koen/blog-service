@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -e  # Exit if any command fails
+
+export MYUID="$(id -u)"
+export MYGID="$(id -g)"
+
+export ENV_FILE=".env"
+export SERVICE="blog-service"
+export SRC_DIR="/app/src/"
+
+# Common docker prefix
+DOCKER_RUN="docker compose --env-file $ENV_FILE run --rm $SERVICE"
+
+$DOCKER_RUN pytest -v
+$DOCKER_RUN mypy $SRC_DIR
+$DOCKER_RUN flake8 $SRC_DIR
+$DOCKER_RUN black --check --diff --color $SRC_DIR

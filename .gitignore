@@ -129,6 +129,9 @@ celerybeat.pid
 
 # Environments
 .env
+.env.dev
+.env.test
+.env.prod
 .venv
 env/
 venv/
@@ -169,3 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Blog images
+/src/media/*
+/scr/posts/static/images/*
+
+# Website static for nginx
+/src/staticfiles/

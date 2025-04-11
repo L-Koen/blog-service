@@ -1,0 +1,121 @@
+/* static/css/styles.css */
+
+/* Banner Styling */
+.site-banner {
+    text-align: center;  /* Centers the image */
+    background-color: #f4f4f4;  /* Light gray background (adjust as needed) */
+    padding: 10px 0;  /* Adds spacing above and below */
+}
+
+.banner-content {
+    position: relative;
+    text-align: center;
+}
+
+.site-banner-img {
+    max-width: 30%;  /* Ensures the image scales well */
+    height: auto;
+}
+
+.site-title-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Perfect center */
+    font-family: 'Quicksand', sans-serif; /* rounded font */
+    font-size: 10rem;
+    color: rgba(255, 182, 193, 0.8); /*transparent;*/
+    -webkit-text-stroke: 3px white; 
+    text-stroke: 3px white;         /* non-prefixed for some browsers */
+    text-align: center;
+    letter-spacing: 4px;
+    text-transform: lowercase;
+    pointer-events: none; /* optional: don't block clicks */
+    text-shadow:
+      0 0 6px rgba(255, 105, 180, 0.4),   /* soft glow */
+      0 0 12px rgba(255, 105, 180, 0.3);  /* outer glow */
+}
+
+
+.post-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+}
+
+.layout-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr 300px; /* left - center - right */
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Optional styling */
+.sidebar-left,
+.sidebar-right {
+    background-color: #f4f4f4;
+    padding: 1rem/*15px*/;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.sidebar-left {
+    grid-column: 1;
+}
+
+.main-content {
+    grid-column: 2;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.sidebar-right {
+    grid-column: 3;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0
+}
+
+.sidebar-right select {
+    width: 90%;
+    display: block;
+    margin: 0 auto;
+}
+
+.sidebar-right textarea {
+    width: 90%;
+    display: block;
+    margin: 0.5em auto;    
+}
+
+.post-title-link {
+    font-size: 2.0rem;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 15px;
+}
+
+a {
+    text-decoration: none;
+    color: #0077cc;
+}
+
+a:hover {
+    text-decoration: underline;
+}

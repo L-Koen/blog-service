@@ -1,0 +1,112 @@
+# TinkeringAlong Blog Service
+
+## Description
+A lightweight, Markdown-powered blog service built with Django, designed to integrate into a larger microservices setup. This service handles blog post creation, keyword-based filtering, media/image embedding with alt-text support, and simple search.
+
+## Features
+- Clean separation of concerns: only responsible for blog functionality
+- Supports Markdown content (with code highlighting and tables)
+- Image uploads with alt-text (for accessibility)
+- Keyword-based filtering (with AND/OR logic)
+- Post previews with closed HTML tags
+- Pagination
+- Admin-only post management
+- Ready for CI/CD deployment with Docker
+- Can be served via Nginx and Gunicorn
+
+## Tech Stack
+- Python
+- Django
+- SQLite (lightweight, small blog)
+- Docker & Docker Compose
+- Pytest, mypy, black, flake8
+- BeautifulSoup & Markdown extensions
+- Gunicorn if required
+
+## Running Locally (Dev)
+
+1. Clone the project and enter the directory
+
+```bash
+# Clone and enter the repository
+git clone https://github.com/yourusername/blog-service.git
+cd blog-service
+```
+
+2. Copy `.env.example` to `.env`
+3. Adjust the environment variables as needed (See at the end of the README for more info)
+4. Start the project:
+
+```bash
+# Start containers for local development
+./start_dev.sh
+
+# Then inside the container shell (once):
+cd /app/src
+
+# Apply migrations
+python manage.py migrate
+
+# Create a superuser
+python manage.py createsuperuser
+```
+
+## Running Tests
+
+```bash
+./run_checks.dev   # for relaxed development checks
+./run_checks.test  # for full pre-deploy checks
+./run_checks.sh    # Using the deployment settings
+```
+
+The .dev script runs:
+- pytest for tests
+- black --check for formatting
+
+The other scripts run:
+- pytest for tests
+- mypy for type checking
+- flake8 for linting
+- black for formatting
+
+## Test-Driven Development (TDD)
+This project is built using TDD principles. You’ll find test cases for:
+- Models (Post, Keyword, BlogImage)
+- Views (Homepage with filters, Detail view)
+- Markdown rendering with image enhancement
+- Post preview logic
+- Keyword filters (AND/OR logic + UI checks)
+- Search form behavior
+
+## Deployment Notes
+The app is designed to run behind Nginx using Gunicorn. Nginx serves static and media files directly for efficiency.
+- Static files are collected with collectstatic and stored outside the container
+- Media uploads are saved to /media/ and served by Nginx
+- Gunicorn runs the Django app using:
+  - gunicorn blog.wsgi:application --bind 0.0.0.0:$PORT
+- Self-signed certificates can be used for local HTTPS testing via Nginx.
+
+## The `.env` file
+
+See the `.env.example` for all parameters.
+
+| Variable | Description |
+|:---------|:------------|
+| `DEBUG` | `True` or `False`. Sets Django's debug mode. Use `False` in production. |
+| `ALLOWED_HOSTS` | Comma-separated list. IP/domain names where Django is allowed to serve. |
+| `SECRET_KEY` | Your Django secret key. _(Insert a secure, random key here!)_ |
+| `RUN_MODE` | Either `django`,  `test`, or `prod`. Sets which web server is used. |
+| `PORT` | Port where the app will be available. |
+| `BASE_PATH` | Base path added to the host (e.g., `/blog/`). Used for routing and static/media URLs. |
+| `ADMIN_URL` | Change the URL of the admin panel. _(Obscurity, not security, but useful against bots.)_ |
+| `MEDIA_URL` | URL path for serving media files (e.g., uploaded images). |
+| `STATIC_URL` | URL path for serving static files (e.g., CSS, JavaScript). |
+| `CORS_ALLOWED_ORIGINS` | If using Nginx: `https://your-nginx-domain:port`. Otherwise: `http://allowed_host:port`. |
+| `CSRF_TRUSTED_ORIGINS` | Same logic as CORS. Required for Django admin and secure POST forms. |
+
+Variables Used fron the .env.dev and .env.test:
+For .env.dev and .env.test, only the following parameters are loaded:
+- DEBUG
+- RUN_MODE
+- PORT
+All the rest are loaded from the .env file. The way my development machine is setup, this made the most sense. On my real server I need a different .env file anyway.

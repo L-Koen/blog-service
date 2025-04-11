@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Blog Home{% endblock %}
+
+{% block filters %}  
+  <form method="get">
+    <label for="keywords">Filter by keywords:</label>
+    <br>
+    <select name="keywords" id="keywords" multiple>
+        {% for keyword in available_keywords %}
+            <option value="{{ keyword.name }}">{{ keyword.name | safe }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="filter_mode">Keyword Filter mode:</label>
+      <select name="filter_mode" id="filter_mode">
+        <option value="OR">OR (Any selected keyword)</option>
+        <option value="AND">AND (All selected keywords required)</option>
+      </select>
+    <br>
+    <br>
+    <!--  Add a normal text search input -->
+    <label for="search">Search content:</label>
+    <br>
+    <textarea id="search" name="search">{{ request.GET.search|default:'' }}</textarea>    <br>
+    <br>
+    <button type="submit">Filter</button>
+  </form>
+{% endblock %}
+
+{% block content %}
+  <ul>
+    {% for post in posts %}
+      <li><h3><a href="{% url 'posts:post_detail' post.id %}" class="post-title-link">{{ post.title | safe }}</a></h3></li>
+      <p> {{ post.preview | safe }}</p>
+      <p> <a href="{% url 'posts:post_detail' post.id %}" class="post-link">Read more... </a></p>
+      <br>
+      
+    {% empty %}
+      <p>No posts yet.</p>
+    {% endfor %}
+  </ul>
+  <!-- Pagination -->
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    
+    <span class="current-page">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+{% endblock %}
