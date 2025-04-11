@@ -1,0 +1,69 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI/CD
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build-and-test"
+  build-and-test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Create .env.test from GitHub secrets
+        run: |
+          echo "DEBUG=${{ secrets.DEBUG }}" >> .env.test
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+          echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
+          echo "RUN_MODE=${{ secrets.RUN_MODE }}" >> .env.test
+          echo "PORT=8000" >> .env.test
+          echo "BASE_PATH=blog/" >> .env
+          echo "ADMIN_URL=admin/" >> .env
+          echo "MEDIA_URL=media/" >> .env
+          echo "STATIC_URL=static/" >> .env
+          echo "CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}" >> .env
+          echo "CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }}" >> .env
+
+      # Build docker and start server
+      - name: Start test
+        run: |
+          chmod +x ./start_test.sh
+          ./start_test.sh
+
+      # Run tests and code quality checks
+      - name: Run checks
+        run: |
+          chmod +x ./run_checks.test
+          ./run_checks.test
+          
+  deploy:
+    # Only run if build and test finished properly
+    needs: build-and-test
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Deploy using SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 2222
+          script: |
+            /home/debian/tinkeringalong/deploy_blog.sh
